@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-container">
-    <div class="dashboard-text">name: {{ name }}</div>
+    <div class="dashboard-text">欢迎您<span class="name"> {{ name }} </span>，进入帅气马哥博客后台</div>
   </div>
 </template>
 
@@ -25,6 +25,9 @@ export default {
   &-text {
     font-size: 30px;
     line-height: 46px;
+    .name {
+      color: purple;
+    }
   }
 }
 </style>

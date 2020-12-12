@@ -36,7 +36,17 @@ module.exports = {
       warnings: false,
       errors: true
     },
-    before: require('./mock/mock-server.js')
+    // before: require('./mock/mock-server.js'),
+    proxy: {
+      '/blog-api': {
+        target: 'http://localhost:8888/', // 需要跨域的目标url
+        changeOrigin: true, // 将基于名称的虚拟托管网站的选项，如果不配置，请求会报404
+        ws: true,
+        pathRewrite: {
+          '^/blog-api': ''
+        }
+      }
+    }
   },
   configureWebpack: {
     // provide the app's title in webpack's name field, so that

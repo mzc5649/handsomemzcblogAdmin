@@ -1,8 +1,8 @@
 import request from '@/utils/request'
 
-export function getUserList(params) {
+export function getClassifyList(params) {
   return request({
-    url: '/api/user',
+    url: '/blog-api/admin/classify',
     method: 'get',
     params
   })
