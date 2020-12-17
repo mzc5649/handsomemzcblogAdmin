@@ -12,7 +12,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="文章">
-        <mavon-editor v-model="form.articleContent.artContentMd" @change='getContentHtml'/>
+        <mavon-editor ref="md" v-model="form.articleContent.artContentMd" @change='getContentHtml' @imgAdd="$imgAdd" @imgDel="$imgDel"/>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSubmit">提交</el-button>
@@ -25,6 +25,7 @@
 <script>
 import { addArticle } from '@/api/article'
 import { getClassifyList } from '@/api/classify'
+import { addImage, delImage } from '@/api/util'
 
 export default {
   data() {
@@ -70,6 +71,29 @@ export default {
     },
     getContentHtml(value, render) {
       this.form.articleContent.artContent = render
+    },
+    // 上传图片
+    $imgAdd(pos, $file) {
+      const that = this
+      var formdata = new FormData()
+      formdata.append('image', $file)
+      addImage(formdata).then(res => {
+        that.$refs['md'].$img2Url(pos, res.data)
+      }).catch(res => {
+        that.$refs['md'].$refs.toolbar_left.$imgDelByFilename($file._name)
+      })
+    },
+    // 删除图片
+    $imgDel($file) {
+      const data = {
+        fileUrl: $file[0]
+      }
+      delImage(data).then(res => {
+        this.$message({
+          type: 'info',
+          message: '图片已删除'
+        })
+      })
     }
   }
 }
