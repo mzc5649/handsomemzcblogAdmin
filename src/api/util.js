@@ -1,9 +1,10 @@
 import request from '@/utils/request'
-export function addImage(image) {
+export function addImage(image,onUploadProgress) {
   return request({
     url: '/blog-api/img/upload',
     method: 'post',
-    headers: { 'content-type': 'application/x-www-form-urlencoded' }, // 请求头，发送FormData格式的数据，必须是 这种请求头。
+    headers: { 'Content-Type': 'multipart/form-data' },
+    onUploadProgress: onUploadProgress,
     data: image
   })
 }

@@ -7,3 +7,10 @@ export function getClassifyList(params) {
     params
   })
 }
+export function addClassiy(data) {
+  return request({
+    url: '/blog-api/admin/classify',
+    method: 'post',
+    data: data
+  })
+}

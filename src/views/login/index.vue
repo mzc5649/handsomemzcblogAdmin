@@ -68,7 +68,7 @@ export default {
     }
     const validatePassword = (rule, value, callback) => {
       if (value.length === 0) {
-        callback(new Error('账号不能为0字符用户名'))
+        callback(new Error('密码不能为0字符'))
       } else {
         callback()
       }
