@@ -57,13 +57,13 @@ export const constantRoutes = [
   {
     path: '/user',
     component: Layout,
-    redirect: '/user/table',
+    redirect: '/user/userTable',
     name: 'User',
     meta: { title: '用户管理', icon: 'el-icon-s-help' },
     children: [
       {
-        path: 'table',
-        name: 'Table',
+        path: 'userTable',
+        name: 'UserTable',
         component: () => import('@/views/table/user/index'),
         meta: { title: '用户列表', icon: 'table' }
       }
@@ -72,12 +72,12 @@ export const constantRoutes = [
   {
     path: '/article',
     component: Layout,
-    redirect: '/article/table',
+    redirect: '/article/articleTable',
     name: 'Article',
     meta: { title: '文章管理', icon: 'el-icon-s-help' },
     children: [
       {
-        path: 'table',
+        path: 'articleTable',
         name: 'ArticleTable',
         component: () => import('@/views/table/article/index'),
         meta: { title: '文章列表', icon: 'table' }
@@ -100,13 +100,13 @@ export const constantRoutes = [
   {
     path: '/classify',
     component: Layout,
-    redirect: '/classify/table',
+    redirect: '/classify/classifyTree',
     name: 'Classify',
     meta: { title: '分类管理', icon: 'el-icon-s-help' },
     children: [
       {
-        path: 'tree',
-        name: 'Tree',
+        path: 'classifyTree',
+        name: 'ClassifyTree',
         component: () => import('@/views/tree/classify/index'),
         meta: { title: '分类列表', icon: 'tree' }
       },
