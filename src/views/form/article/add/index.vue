@@ -12,7 +12,6 @@
                 <div style="position: absolute;left: 200px;bottom: 0;display: flex">
                   <el-button type="info" circle icon="el-icon-zoom-in" @click.stop="coverShow"></el-button>
                   <el-button type="danger" circle icon="el-icon-delete" @click.stop="coverDel"></el-button>
-                  <el-button type="primary"  @click.stop="cover1">上传此时</el-button>
                 </div>
             </div>
             <i v-else  class="el-icon-plus img-uploader-icon"></i>
@@ -58,13 +57,16 @@ export default {
     return {
       loading: true,
       upCoverProgress: 0,
+      // 封面图临时文件
       coverFile: '',
-      uploadStepActive: 0,
+      // 查看大图是否显示
       imgShowDialogVisible: false,
       // 是否展示上传窗口进度
       uploadVisible: false,
       // 步骤条是否可以点击关闭
       uploadShowClose: false,
+      // 步骤条当前步骤激活序号
+      uploadStepActive: 0,
       // 步骤条处理时的状态
       processStatus: 'process',
       form: {
@@ -107,9 +109,10 @@ export default {
         })
       } catch (error) {
         this.uploadShowClose = true
+        this.processStatus = 'error'
         this.$message({
           type: 'error',
-          message: '发布文章失败'
+          message: '发布文章失败(' + e + ')'
         })
       }
     },
@@ -154,9 +157,11 @@ export default {
       this.coverFile.src = this.convertSrc(file)
       return false
     },
+    // 封面显示大图
     coverShow() {
       this.imgShowDialogVisible = true
     },
+    // 删除封面临时文件
     coverDel() {
       this.coverFile = ''
     },
@@ -175,11 +180,9 @@ export default {
         }).then(res => {
           this.form.coverUrl = res.data
           this.uploadStepActive = 1
-          resolve()
+          return resolve()
         }).catch(err => {
-          this.processStatus = 'error'
-          reject('上传封面失败')
-          console.log(err)
+          return reject('上传封面失败')
         })
       })
     },
@@ -190,8 +193,7 @@ export default {
           this.uploadStepActive = 2
           resolve()
         }).catch(error => {
-          this.processStatus = 'error'
-          reject('上传文章失败')
+          return reject('上传文章失败')
         })
       })
     },
