@@ -34,7 +34,7 @@
       <el-input v-model="form.artInfoModifiedTime" type="fixed-time"  style="width: 100%;" readonly/>
       </el-form-item>
       <el-form-item label="文章">
-        <mavon-editor v-model="form.articleContent.artContentMd" @change='getContentHtml' @imgAdd="$imgAdd" @imgDel="$imgDel"/>
+        <mavon-editor ref="md" v-model="form.articleContent.artContentMd" @change='getContentHtml' @imgAdd="$imgAdd" @imgDel="$imgDel"/>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSubmit">修改</el-button>
@@ -62,6 +62,7 @@ export default {
   data() {
     return {
       id: '',
+      loading: true,
       // 封面图临时文件
       coverFile: '',
       // 查看大图是否显示
@@ -177,7 +178,7 @@ export default {
     // 删除封面临时文件
     coverDel() {
       this.coverFile = ''
-      this.form.coverUrl = null
+      this.form.coverUrl = ''
     },
     // 上传封面
     upCoverFile() {

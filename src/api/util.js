@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-export function addImage(image,onUploadProgress) {
+export function addImage(image, onUploadProgress) {
   return request({
     url: '/blog-api/img/upload',
     method: 'post',
