@@ -8,7 +8,7 @@
       fit
       highlight-current-row
     >
-      <el-table-column align="center" prop="ID" label="ID" width="95" >
+      <el-table-column align="center" prop="ID" label="ID" width="95">
         <template slot-scope="scope">
           {{ scope.row.artInfoId }}
         </template>
@@ -28,27 +28,61 @@
           {{ scope.row.user?scope.row.user.uUsername:'' }}
         </template>
       </el-table-column>
+      <el-table-column align="center" label="置顶">
+        <template slot-scope="scope">
+          <el-switch
+            v-model="scope.row.artInfoIsTop"
+            @change="changeIsTop(scope.row.artInfoId,scope.row.artInfoIsTop,scope.row)"
+            :active-value=1
+            :inactive-value=0
+            active-color="#13ce66"
+            inactive-color="#ff4949">
+          </el-switch>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="状态">
+        <template slot-scope="scope">
+          <el-tag
+            size="mini"
+            :type="scope.row.artInfoStatus | statusFilterType"
+            effect="dark"
+          >{{ scope.row.artInfoStatus | statusFilterText }}</el-tag>
+          <el-tag
+            size="mini"
+            v-if="scope.row.artInfoIsTop === 1"
+            style="margin-left: 10px">
+            置顶
+          </el-tag>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="CreateTime">
         <template slot-scope="scope">
-          <i class="el-icon-time" />
+          <i class="el-icon-time"/>
           <span>{{ scope.row.artInfoCreatedTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="ModifiedTime"  >
+      <el-table-column align="center" label="ModifiedTime">
         <template slot-scope="scope">
-          <i class="el-icon-time" />
+          <i class="el-icon-time"/>
           <span>{{ scope.row.artInfoModifiedTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center"  label="Action">
+      <el-table-column align="center" label="Action">
         <template slot-scope="scope">
           <el-button
             size="mini"
-            @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+            @click="handleOpen(scope.row.artInfoId)">查看
+          </el-button>
+          <el-button
+            size="mini"
+            @click="handleEdit(scope.$index, scope.row)">编辑
+          </el-button>
           <el-button
             size="mini"
             type="danger"
-            @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            style="margin-top: 10px"
+            @click="handleDelete(scope.$index, scope.row)">删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -64,15 +98,23 @@
 </template>
 
 <script>
-import { getArticleList, delArticle } from '@/api/article'
+import { getArticleList, delArticle, uptArticleIsTopById } from '@/api/article'
 
 export default {
   filters: {
-    statusFilter(status) {
+    statusFilterType(status) {
       const statusMap = {
-        published: 'success',
-        draft: 'gray',
-        deleted: 'danger'
+        0: 'success',
+        1: 'info',
+        2: 'danger'
+      }
+      return statusMap[status]
+    },
+    statusFilterText(status) {
+      const statusMap = {
+        0: '正常',
+        1: '审核',
+        2: '下架'
       }
       return statusMap[status]
     }
@@ -100,13 +142,30 @@ export default {
         this.listLoading = false
       })
     },
+    /* 改变置顶状态 */
+    changeIsTop(id, value, row) {
+      // 改变状态
+      uptArticleIsTopById(id).then(res => {
+        this.$message({
+          type: 'success',
+          message: '修改成功!'
+        })
+      }).catch(function() {
+        // 恢复原状
+        row.artInfoIsTop = value ? 0 : 1
+      })
+    },
     pageChange(index) {
       this.page.currentPage = index
       this.fetchData()
     },
+    handleOpen(id) {
+      window.open('https://handsomemzc.cn/#/blog/article/' + id, '_blank')
+    },
     handleEdit(index, row) {
       this.$router.push(
-        { name: 'EditArticle', params: { id: row.artInfoId }
+        {
+          name: 'EditArticle', params: {id: row.artInfoId}
         })
     },
     handleDelete(index, row) {

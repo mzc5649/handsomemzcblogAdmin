@@ -27,6 +27,12 @@ export function uptArticleById(id, article) {
     data
   })
 }
+export function uptArticleIsTopById(id) {
+  return request({
+    url: '/blog-api/admin/article/top/' + id,
+    method: 'put'
+  })
+}
 export function addArticle(article) {
   const data = qs.parse(article)
   return request({

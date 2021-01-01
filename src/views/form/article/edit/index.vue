@@ -1,6 +1,26 @@
 <template>
   <div class="app-container" >
     <el-form ref="form" :model="form" label-width="120px" v-loading="loading">
+      <el-form-item label="操作" style="position: sticky;top: 0px;z-index: 1501;background-color: white">
+        <el-button type="primary" @click="onSubmit">修改</el-button>
+        <el-button @click="onCancel">返回</el-button>
+      </el-form-item>
+      <el-form-item label="状态">
+        <el-select v-model="form.artInfoStatus" placeholder="当前状态">
+          <template v-for="item in statusOption">
+            <el-option :key="item.value" :label="item.label" :value="item.value" />
+          </template>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="置顶">
+        <el-switch
+          v-model="form.artInfoIsTop"
+          :active-value=1
+          :inactive-value=0
+          active-color="#13ce66"
+          inactive-color="#ff4949">
+        </el-switch>
+      </el-form-item>
       <el-form-item label="封面(可选)">
         <el-upload
           class="img-uploader"
@@ -35,10 +55,6 @@
       </el-form-item>
       <el-form-item label="文章">
         <mavon-editor ref="md" v-model="form.articleContent.artContentMd" @change='getContentHtml' @imgAdd="$imgAdd" @imgDel="$imgDel"/>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="onSubmit">修改</el-button>
-        <el-button @click="onCancel">返回</el-button>
       </el-form-item>
     </el-form>
     <el-dialog :visible.sync="imgShowDialogVisible">
@@ -78,6 +94,8 @@ export default {
       // 步骤条处理时的状态
       processStatus: 'process',
       form: {
+        artInfoStatus: '',
+        artInfoIsTop: 0,
         coverUrl: '',
         artInfoTitle: '',
         articleSort: '',
@@ -88,7 +106,21 @@ export default {
           artContent: ''
         }
       },
-      classifyData: []
+      classifyData: [],
+      statusOption: [
+        {
+          label: '正常',
+          value: 0
+        },
+        {
+          label: '审核',
+          value: 1
+        },
+        {
+          label: '下架',
+          value: 2
+        }
+      ]
     }
   },
   created() {

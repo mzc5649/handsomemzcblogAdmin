@@ -51,8 +51,9 @@
 import { addArticle } from '@/api/article'
 import { getClassifyList } from '@/api/classify'
 import { addImage, delImage } from '@/api/util'
-
 export default {
+  components: {
+  },
   data() {
     return {
       loading: true,
