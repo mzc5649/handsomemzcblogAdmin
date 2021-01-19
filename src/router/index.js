@@ -51,7 +51,7 @@ export const constantRoutes = [
       path: 'dashboard',
       name: 'Dashboard',
       component: () => import('@/views/dashboard/index'),
-      meta: { title: '仪表面板', icon: 'dashboard' }
+      meta: { title: '仪表盘', icon: 'dashboard' }
     }]
   },
   {
@@ -59,13 +59,13 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/user/userTable',
     name: 'User',
-    meta: { title: '用户管理', icon: 'el-icon-s-help' },
+    meta: { title: '用户', icon: 'el-icon-user' },
     children: [
       {
         path: 'userTable',
         name: 'UserTable',
         component: () => import('@/views/table/user/index'),
-        meta: { title: '用户列表', icon: 'table' }
+        meta: { title: '所有用户', icon: 'table' }
       }
     ]
   },
@@ -74,26 +74,26 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/article/articleTable',
     name: 'Article',
-    meta: { title: '文章管理', icon: 'el-icon-s-help' },
+    meta: { title: '文章', icon: 'el-icon-reading' },
     children: [
       {
         path: 'articleTable',
         name: 'ArticleTable',
         component: () => import('@/views/table/article/index'),
-        meta: { title: '文章列表', icon: 'table' }
+        meta: { title: '所有文章', icon: 'table' }
       },
       {
         path: 'form',
         name: 'Form',
         component: () => import('@/views/form/article/add/index'),
-        meta: { title: '添加文章', icon: 'table' }
+        meta: { title: '写文章', icon: 'el-icon-edit' }
       },
       {
         path: 'edit/:id',
         name: 'EditArticle',
         hidden: true,
         component: () => import('@/views/form/article/edit/index'),
-        meta: { title: '编辑文章', icon: 'table' }
+        meta: { title: '编辑文章', icon: 'el-icon-edit' }
       }
     ]
   },
@@ -102,19 +102,34 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/classify/classifyTree',
     name: 'Classify',
-    meta: { title: '分类管理', icon: 'el-icon-s-help' },
+    meta: { title: '分类', icon: 'el-icon-s-grid' },
     children: [
       {
         path: 'classifyTree',
         name: 'ClassifyTree',
         component: () => import('@/views/tree/classify/index'),
-        meta: { title: '分类列表', icon: 'tree' }
+        meta: { title: '所有分类', icon: 'tree' }
       },
       {
         path: 'addClassify',
         name: 'AddClassify',
         component: () => import('@/views/form/classify/add/index'),
-        meta: { title: '添加分类', icon: 'tree' }
+        meta: { title: '添加分类', icon: 'el-icon-edit' }
+      }
+    ]
+  },
+  {
+    path: '/media',
+    component: Layout,
+    redirect: '/media/mediaTable',
+    name: 'Media',
+    meta: { title: '媒体', icon: 'el-icon-folder' },
+    children: [
+      {
+        path: 'mediaTable',
+        name: 'MediaTable',
+        component: () => import('@/views/table/media/index'),
+        meta: { title: '媒体库', icon: 'el-icon-folder' }
       }
     ]
   },
