@@ -1,6 +1,9 @@
 <template>
   <div class="app-container" >
     <el-form ref="form" :model="form" label-width="120px" v-loading="loading">
+      <el-form-item label="媒体">
+        <el-button>添加媒体</el-button>
+      </el-form-item>
       <el-form-item label="封面(可选)">
           <el-upload
             class="img-uploader"
@@ -51,6 +54,7 @@
 import { addArticle } from '@/api/article'
 import { getClassifyList } from '@/api/classify'
 import { addImage, delImage } from '@/api/util'
+import { Message } from 'element-ui'
 export default {
   components: {
   },
@@ -131,7 +135,7 @@ export default {
       const formdata = new FormData()
       formdata.append('image', $file)
       addImage(formdata).then(res => {
-        that.$refs['md'].$img2Url(pos, res.data)
+        that.$refs['md'].$img2Url(pos, res.data.url)
       }).catch(res => {
         that.$refs['md'].$refs.toolbar_left.$imgDelByFilename($file._name)
       })
@@ -154,6 +158,14 @@ export default {
     },
     // 上传封面图片前
     beforeAvatarUpload(file) {
+      if (file.size > 1048576) {
+        Message({
+          message: '图片大小限制1m',
+          type: 'error',
+          duration: 5 * 1000
+        })
+        return
+      }
       this.coverFile = file
       this.coverFile.src = this.convertSrc(file)
       return false
@@ -179,7 +191,7 @@ export default {
           const completeProgress = ((e.loaded / e.total * 100) | 0)
           this.upCoverProgress = completeProgress
         }).then(res => {
-          this.form.coverUrl = res.data
+          this.form.coverUrl = res.data.url
           this.uploadStepActive = 1
           return resolve()
         }).catch(err => {

@@ -13,7 +13,7 @@
         <el-input
           ref="username"
           v-model="loginForm.uName"
-          placeholder="账号"
+          placeholder="邮箱"
           name="username"
           type="text"
           tabindex="1"
@@ -54,11 +54,6 @@ export default {
   name: 'Login',
   data() {
     const validateUsername = (rule, value, callback) => {
-      // if (!validUsername(value)) {
-      //   callback(new Error('Please enter the correct user name'))
-      // } else {
-      //   callback()
-      // }
       if (value.length === 0) {
         callback(new Error('账号不能为0字符'))
       } else {

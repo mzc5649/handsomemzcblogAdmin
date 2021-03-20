@@ -39,7 +39,7 @@ module.exports = {
     // before: require('./mock/mock-server.js'),
     proxy: {
       '/blog-api': {
-        target: 'http://localhost:8888/', // 需要跨域的目标url
+        target: 'http://localhost:8888', // 需要跨域的目标url
         changeOrigin: true, // 将基于名称的虚拟托管网站的选项，如果不配置，请求会报404
         ws: true,
         pathRewrite: {

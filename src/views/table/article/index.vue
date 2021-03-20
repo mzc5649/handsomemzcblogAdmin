@@ -89,7 +89,7 @@
     <el-pagination
       background
       layout="total, prev, pager, next"
-      :page-size="page.pageNum"
+      :page-size="page.pageSize"
       :current-page="page.pageIndex"
       :total="total"
       @current-change="pageChange">

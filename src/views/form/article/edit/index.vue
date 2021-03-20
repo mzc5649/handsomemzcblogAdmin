@@ -176,7 +176,7 @@ export default {
       var formdata = new FormData()
       formdata.append('image', $file)
       addImage(formdata).then(res => {
-        that.$refs['md'].$img2Url(pos, res.data)
+        that.$refs['md'].$img2Url(pos, res.data.url)
       }).catch(res => {
         that.$refs['md'].$refs.toolbar_left.$imgDelByFilename($file._name)
       })
@@ -225,7 +225,7 @@ export default {
           const completeProgress = ((e.loaded / e.total * 100) | 0)
           this.upCoverProgress = completeProgress
         }).then(res => {
-          this.form.coverUrl = res.data
+          this.form.coverUrl = res.data.url
           this.uploadStepActive = 1
           this.coverFile = ''
           return resolve('上传封面成功')

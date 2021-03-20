@@ -65,7 +65,7 @@ export const constantRoutes = [
         path: 'userTable',
         name: 'UserTable',
         component: () => import('@/views/table/user/index'),
-        meta: { title: '所有用户', icon: 'table' }
+        meta: { title: '所有用户', icon: 'el-icon-user' }
       }
     ]
   },
@@ -130,6 +130,12 @@ export const constantRoutes = [
         name: 'MediaTable',
         component: () => import('@/views/table/media/index'),
         meta: { title: '媒体库', icon: 'el-icon-folder' }
+      },
+      {
+        path: 'addMedia',
+        name: 'AddMedia',
+        component: () => import('@/views/form/media/index'),
+        meta: { title: '添加新媒体', icon: 'el-icon-folder' }
       }
     ]
   },

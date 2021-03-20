@@ -2,7 +2,7 @@ import request from '@/utils/request'
 import qs from 'qs'
 export function login(data) {
   return request({
-    url: '/blog-api/admin/login',
+    url: '/admin/login',
     method: 'post',
     data
   })
@@ -10,7 +10,7 @@ export function login(data) {
 
 export function getInfo(token) {
   return request({
-    url: '/blog-api/admin/userInfo',
+    url: '/admin/userInfo',
     method: 'get',
     params: { token: token }
   })
@@ -24,7 +24,7 @@ export function logout() {
 }
 export function getUserList(params) {
   return request({
-    url: '/blog-api/admin/user',
+    url: '/admin/user',
     method: 'get',
     params
   })
@@ -32,14 +32,14 @@ export function getUserList(params) {
 
 export function delUserById(id) {
   return request({
-    url: '/api/user/' + id,
+    url: '/user/' + id,
     method: 'delete'
   })
 }
 export function uptUser(user) {
   const data = qs.parse(user)
   return request({
-    url: '/blog-api/admin/user',
+    url: '/admin/user',
     method: 'put',
     data
   })
