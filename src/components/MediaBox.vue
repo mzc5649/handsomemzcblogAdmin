@@ -33,7 +33,6 @@
     </div>
   </div>
     <div class="drawer-bg" @touchmove.prevent="">
-
     </div>
   </div>
 </template>
