@@ -63,6 +63,7 @@ export default {
     top: 0;
     left: 0;
     background-color: rgba(0,0,0,.5);
+    backdrop-filter: blur(5px);
     z-index: 1002;
   }
 .media-box{
@@ -138,6 +139,7 @@ export default {
     }
     .media-info{
       width: 100%;
+
       padding: 12px 16px;
       background-color: #f3f3f3;
       height: 100%;

@@ -2,7 +2,7 @@
   <div class="app-container" >
     <el-form ref="form" :model="form" label-width="120px" v-loading="loading">
       <el-form-item label="媒体">
-        <el-button>添加媒体</el-button>
+        <el-button @click="openMediaStock">添加媒体</el-button>
       </el-form-item>
       <el-form-item label="封面(可选)">
           <el-upload
@@ -47,6 +47,7 @@
         <el-step title="上传文章"></el-step>
       </el-steps>
     </el-dialog>
+    <MediaStock :is-show="mediaStock.isShow" @closeMediaStock="closeMediaStock" @confirmMedia="confirmMedia"></MediaStock>
   </div>
 </template>
 
@@ -55,8 +56,10 @@ import { addArticle } from '@/api/article'
 import { getClassifyList } from '@/api/classify'
 import { addImage, delImage } from '@/api/util'
 import { Message } from 'element-ui'
+import MediaStock from '@/components/MediaStock'
 export default {
   components: {
+    MediaStock
   },
   data() {
     return {
@@ -85,7 +88,10 @@ export default {
           artContent: ''
         }
       },
-      classifyData: []
+      classifyData: [],
+      mediaStock: {
+        isShow: false
+      }
     }
   },
   created() {
@@ -216,6 +222,19 @@ export default {
       this.finishStatus = 'finish'
       this.processStatus = 'process'
       this.uploadStepActive = 0
+    },
+    // 打开媒体库
+    openMediaStock() {
+      this.mediaStock.isShow = true
+    },
+    // 关闭媒体库
+    closeMediaStock() {
+      this.mediaStock.isShow = false
+    },
+    // 选择媒体后
+    confirmMedia(media) {
+      const md = '![' + media.mediaInfoTitle + '](' + media.mediaInfoUrl + ')'
+      this.form.articleContent.artContentMd += md
     }
   }
 }
