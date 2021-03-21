@@ -168,7 +168,7 @@ export default {
       this.fetchData()
     },
     handleOpen(id) {
-      window.open('https://handsomemzc.cn/#/blog/article/' + id, '_blank')
+      window.open('https://handsomemzc.cn/blog/article/' + id, '_blank')
     },
     handleEdit(index, row) {
       this.$router.push(

@@ -1,9 +1,12 @@
 <template>
-  <div class="app-container" >
-    <el-form ref="form" :model="form" label-width="120px" v-loading="loading">
+  <div class="app-container">
+    <el-form ref="form" v-loading="loading" :model="form" label-width="120px">
       <el-form-item label="操作" style="position: sticky;top: 0px;z-index: 1501;background-color: white">
         <el-button type="primary" @click="onSubmit">修改</el-button>
         <el-button @click="onCancel">返回</el-button>
+      </el-form-item>
+      <el-form-item label="媒体">
+        <el-button @click="openMediaStock">添加媒体</el-button>
       </el-form-item>
       <el-form-item label="状态">
         <el-select v-model="form.artInfoStatus" placeholder="当前状态">
@@ -15,27 +18,28 @@
       <el-form-item label="置顶">
         <el-switch
           v-model="form.artInfoIsTop"
-          :active-value=1
-          :inactive-value=0
+          :active-value="1"
+          :inactive-value="0"
           active-color="#13ce66"
-          inactive-color="#ff4949">
-        </el-switch>
+          inactive-color="#ff4949"
+        />
       </el-form-item>
       <el-form-item label="封面(可选)">
-        <el-upload
-          class="img-uploader"
-          action="123"
-          :show-file-list="false"
-          :before-upload="beforeAvatarUpload">
+        <div class="coverBox" @click="selectCover()">
           <div v-if="form.coverUrl">
-            <img :src="form.coverUrl" class="avatar"/>
+            <img :src="form.coverUrl" class="avatar">
             <div style="position: absolute;left: 200px;bottom: 0;display: flex">
-              <el-button type="info" circle icon="el-icon-zoom-in" @click.stop="coverShow"></el-button>
-              <el-button type="danger" circle icon="el-icon-delete" @click.stop="coverDel"></el-button>
+              <el-button type="info" circle icon="el-icon-zoom-in" @click.stop="coverShow" />
+              <el-button type="danger" circle icon="el-icon-delete" @click.stop="coverDel" />
             </div>
           </div>
-          <i v-else  class="el-icon-plus img-uploader-icon"></i>
-        </el-upload>
+          <span v-else>
+            <i  class="el-icon-plus img-uploader-icon" />
+            // todo:待完善还原封面
+             <el-button v-if="oldCoverUrl" size="small" type="primary" style="position: absolute;left: 200px;bottom: 0">还原</el-button>
+          </span>
+
+        </div>
       </el-form-item>
       <el-form-item label="标题">
         <el-input v-model="form.artInfoTitle" />
@@ -48,24 +52,19 @@
         </el-select>
       </el-form-item>
       <el-form-item label="发布时间">
-          <el-input v-model="form.artInfoCreatedTime" type="fixed-time"  style="width: 100%;" readonly />
+        <el-input v-model="form.artInfoCreatedTime" type="fixed-time" style="width: 100%;" readonly />
       </el-form-item>
       <el-form-item label="修改时间">
-      <el-input v-model="form.artInfoModifiedTime" type="fixed-time"  style="width: 100%;" readonly/>
+        <el-input v-model="form.artInfoModifiedTime" type="fixed-time" style="width: 100%;" readonly />
       </el-form-item>
       <el-form-item label="文章">
-        <mavon-editor ref="md" v-model="form.articleContent.artContentMd" @change='getContentHtml' @imgAdd="$imgAdd" @imgDel="$imgDel"/>
+        <mavon-editor ref="md" v-model="form.articleContent.artContentMd" @change="getContentHtml" @imgAdd="$imgAdd" @imgDel="$imgDel" />
       </el-form-item>
     </el-form>
     <el-dialog :visible.sync="imgShowDialogVisible">
       <img width="100%" :src="form.coverUrl" alt="">
     </el-dialog>
-    <el-dialog :visible.sync="uploadVisible" :close-on-click-modal="false" :show-close="uploadShowClose" >
-      <el-steps  :active="uploadStepActive" :process-status="processStatus" finish-status="success">
-        <el-step title="上传图片"></el-step>
-        <el-step title="上传文章"></el-step>
-      </el-steps>
-    </el-dialog>
+    <MediaStock :is-show="mediaStock.isShow" @closeMediaStock="closeMediaStock" @confirmMedia="confirmMedia"></MediaStock>
   </div>
 </template>
 
@@ -73,26 +72,20 @@
 import { getArticleById, uptArticleById } from '@/api/article'
 import { getClassifyList } from '@/api/classify'
 import { addImage, delImage } from '@/api/util'
+import MediaStock from "@/components/MediaStock";
 
 export default {
+  components: { MediaStock },
   data() {
     return {
       id: '',
       loading: true,
       // 封面图临时文件
-      coverFile: '',
+      coverFile: {
+        src: ''
+      },
       // 查看大图是否显示
       imgShowDialogVisible: false,
-      // 上传封面进度
-      upCoverProgress: 0,
-      // 是否展示上传窗口进度
-      uploadVisible: false,
-      // 步骤条是否可以点击关闭
-      uploadShowClose: false,
-      // 步骤条当前步骤激活序号
-      uploadStepActive: 0,
-      // 步骤条处理时的状态
-      processStatus: 'process',
       form: {
         artInfoStatus: '',
         artInfoIsTop: 0,
@@ -120,18 +113,28 @@ export default {
           label: '下架',
           value: 2
         }
-      ]
+      ],
+      mediaStock: {
+        isShow: false,
+        selectMediaMode: 1
+      }
     }
   },
   created() {
     this.id = this.$route.params.id
     this.fetchData()
   },
+  computed: {
+    oldCoverUrl() {
+      return window.sessionStorage.getItem('oldCoverUrl') || ''
+    }
+  },
   methods: {
     // 初始化数据
     fetchData() {
       getArticleById(this.id).then(response => {
         this.form = response.data
+        window.sessionStorage.setItem('oldCoverUrl', this.form.coverUrl)
         getClassifyList().then(response => {
           this.classifyData = response.data
           this.loading = false
@@ -139,28 +142,9 @@ export default {
       })
     },
     // 修改文章按钮
-    async onSubmit() {
-      this.initProgress()
-      this.uploadVisible = true
-      try { // 第一步
-        await this.upCoverFile()
-        // 第二步
-        await this.uptArticle()
-        // 可以关闭对话框
-        this.uploadShowClose = true
-        this.$message({
-          type: 'success',
-          message: '修改文章成功'
-        })
-      } catch (e) {
-        // 可以关闭对话框
-        this.uploadShowClose = true
-        this.processStatus = 'error'
-        this.$message({
-          type: 'error',
-          message: '修改文章失败(' + e + ')'
-        })
-      }
+    onSubmit() {
+      this.loading = true
+      this.uptArticle()
     },
     onCancel() {
       this.$router.push({
@@ -193,15 +177,9 @@ export default {
         })
       })
     },
-    // 图片转换成src
+    // 图片转换成src(暂时不用)
     convertSrc(file) {
       return window.URL.createObjectURL(file)
-    },
-    // 上传封面图片前
-    beforeAvatarUpload(file) {
-      this.coverFile = file
-      this.form.coverUrl = this.convertSrc(file)
-      return false
     },
     // 封面显示大图
     coverShow() {
@@ -209,54 +187,55 @@ export default {
     },
     // 删除封面临时文件
     coverDel() {
-      this.coverFile = ''
+      this.coverFile.src = ''
       this.form.coverUrl = ''
-    },
-    // 上传封面
-    upCoverFile() {
-      return new Promise((resolve, reject) => {
-        if (!this.coverFile) {
-          this.uploadStepActive = 1
-          return resolve('无封面')
-        }
-        const formdata = new FormData()
-        formdata.append('image', this.coverFile)
-        addImage(formdata, e => {
-          const completeProgress = ((e.loaded / e.total * 100) | 0)
-          this.upCoverProgress = completeProgress
-        }).then(res => {
-          this.form.coverUrl = res.data.url
-          this.uploadStepActive = 1
-          this.coverFile = ''
-          return resolve('上传封面成功')
-        }).catch(err => {
-          return reject('上传封面失败')
-        })
-      })
     },
     // 修改文章
     uptArticle() {
-      return new Promise((resolve, reject) => {
-        uptArticleById(this.id, this.form).then(response => {
-          this.uploadStepActive = 2
-          return resolve('修改文章成功')
-        }).catch(error => {
-          return reject('修改文章失败')
+      uptArticleById(this.id, this.form).then(response => {
+        this.loading = false
+        this.$message({
+          type: 'success',
+          message: '修改文章成功'
         })
+      }).catch(() => {
+        this.loading = false
       })
     },
-    // 初始化步骤条
-    initProgress() {
-      this.uploadShowClose = false
-      this.finishStatus = 'finish'
-      this.processStatus = 'process'
-      this.uploadStepActive = 0
+    // 打开媒体库
+    openMediaStock() {
+      this.mediaStock.selectMediaMode = 1
+      this.mediaStock.isShow = true
+    },
+    // 关闭媒体库
+    closeMediaStock() {
+      this.mediaStock.isShow = false
+    },
+    // 从媒体库选择封面图片
+    selectCover() {
+      this.mediaStock.selectMediaMode = 2
+      this.mediaStock.isShow = true
+    },
+    // 选择媒体后
+    confirmMedia(media) {
+      const md = '![' + media.mediaInfoTitle + '](' + media.mediaInfoUrl + ')'
+      if (this.mediaStock.selectMediaMode === 1) {
+        this.form.articleContent.artContentMd += md
+      } else if (this.mediaStock.selectMediaMode === 2) {
+        this.form.coverUrl = media.mediaInfoUrl
+      }
     }
   }
 }
 </script>
 
 <style scoped>
+  .coverBox{
+    width: 180px;
+    height: 90px;
+    border: 1px dashed #d9d9d9;
+    cursor: pointer;
+  }
 .line{
   text-align: center;
 }

@@ -24,6 +24,7 @@
                 <div class="upload-to"><strong>上传至：</strong></div>
                 <div class="file-name"><strong>文件名：</strong>{{media.mediaInfoTitle}}</div>
                 <div class="file-type"><strong>文件类型：</strong>{{media.mediaInfoTypeDtl}}</div>
+                <div class="file-ratio" v-if="media.mediaInfoWidth && media.mediaInfoHeight"><strong>分辨率：</strong>{{media.mediaInfoWidth}}:{{media.mediaInfoHeight}}</div>
                 <div class="file-size"><strong>文件大小：</strong>{{media.mediaInfoSize}}</div>
                 <div class="file-url"><strong>文件URL：</strong>{{media.mediaInfoUrl}}</div>
                 <div class="media-comment"><strong>描述：</strong>{{media.mediaInfoComment}}</div>
@@ -139,7 +140,6 @@ export default {
     }
     .media-info{
       width: 100%;
-
       padding: 12px 16px;
       background-color: #f3f3f3;
       height: 100%;

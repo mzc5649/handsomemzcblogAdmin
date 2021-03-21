@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-alert
       type="warning"
-      description="只能上传图片文件,最大上传文件20MB"
+      description="只能上传图片文件,最大上传文件5MB"
       show-icon>
     </el-alert>
     <div class="uploadMedia">

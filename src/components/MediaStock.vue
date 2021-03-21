@@ -71,7 +71,7 @@
             </ul>
         </div>
         <div class="media-toolbar-primary">
-          <el-button type="primary" :disabled="!media" @click="confirmMedia">插入至文章</el-button>
+          <el-button type="primary" :disabled="!media" @click="confirmMedia">插入</el-button>
         </div>
       </div>
     </div>
