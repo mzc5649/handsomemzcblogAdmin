@@ -20,7 +20,7 @@
               <div class="media-info" >
                 <div class="upload-time"><strong>上传于：</strong>{{media.createTime}}</div>
                 <div class="upload-uptime"><strong>更新于：</strong>{{media.updateTime}}</div>
-                <div class="upload-by"><strong>上传者：</strong>{{media.user.uUsername}}</div>
+                <div class="upload-by" v-if="media.user"><strong>上传者：</strong>{{media.user.uUsername}}</div>
                 <div class="upload-to"><strong>上传至：</strong></div>
                 <div class="file-name"><strong>文件名：</strong>{{media.mediaInfoTitle}}</div>
                 <div class="file-type"><strong>文件类型：</strong>{{media.mediaInfoTypeDtl}}</div>
@@ -41,7 +41,7 @@
 <script>
 export default {
   name: 'MediaBox',
-  props: ['media', 'isShow','index'],
+  props: ['media', 'isShow', 'index'],
   methods: {
     closeMediaBox() {
       this.$emit('closeMediaBox')

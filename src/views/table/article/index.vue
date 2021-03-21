@@ -88,11 +88,14 @@
     </el-table>
     <el-pagination
       background
-      layout="total, prev, pager, next"
+      layout="total, prev, pager, next, sizes"
       :page-size="page.pageSize"
       :current-page="page.pageIndex"
       :total="total"
-      @current-change="pageChange">
+      :page-sizes="[10, 20, 50, 100, 200]"
+      @current-change="pageChange"
+      @size-change="pageSizeChange"
+    >
     </el-pagination>
   </div>
 </template>
@@ -157,6 +160,11 @@ export default {
     },
     pageChange(index) {
       this.page.currentPage = index
+      this.fetchData()
+    },
+    // 每页数量改变
+    pageSizeChange(index) {
+      this.page.pageSize = index
       this.fetchData()
     },
     handleOpen(id) {

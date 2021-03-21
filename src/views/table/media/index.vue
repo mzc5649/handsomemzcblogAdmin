@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div v-loading="listLoading">
-      <ul class="image-list">
+      <ul class="image-list" style="overflow:auto">
         <li
           v-for="(item,index) in mediaList"
           :key="item.mediaInfoId"
@@ -22,11 +22,13 @@
     </div>
     <el-pagination
       background
-      layout="total, prev, pager, next"
+      layout="total, prev, pager, next, sizes"
       :page-size="page.pageSize"
-      :current-page="page.pageIndex"
+      :page-sizes="[50, 100, 200]"
+      :current-page.sync="page.pageIndex"
       :total="total"
       @current-change="pageChange"
+      @size-change="pageSizeChange"
     />
     <MediaBox
       :media="mediaBox.media"
@@ -40,7 +42,7 @@
 
 <script>
 import { getMediaList } from '@/api/media'
-import MediaBox from '@/layout/components/MediaBox'
+import MediaBox from '@/components/MediaBox'
 
 export default {
   components: { MediaBox },
@@ -53,7 +55,7 @@ export default {
       listLoading: true,
       page: {
         currentPage: 1,
-        pageSize: 20
+        pageSize: 50
       },
       total: 0,
       mediaBox: {
@@ -81,6 +83,11 @@ export default {
       this.page.currentPage = index
       this.fetchData()
     },
+    // 每页数量改变
+    pageSizeChange(index) {
+      this.page.pageSize = index
+      this.fetchData()
+    },
     // 选择媒体查看
     selectMedia(index) {
       this.mediaBox.index = index
@@ -95,14 +102,14 @@ export default {
     changeMedia(index) {
       if (index < 0) {
         this.$message({
-          type: 'warn',
+          type: 'warning',
           message: '前面再也没有啦!'
         })
         return
       }
       if (index > this.mediaList.length - 1) {
         this.$message({
-          type: 'warn',
+          type: 'warning',
           message: '后面再也没有啦!'
         })
         return
