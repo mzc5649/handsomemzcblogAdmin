@@ -13,17 +13,17 @@
           {{ scope.row.artInfoId }}
         </template>
       </el-table-column>
-      <el-table-column label="Title" :show-overflow-tooltip="true">
+      <el-table-column label="标题" :show-overflow-tooltip="true">
         <template slot-scope="scope">
           {{ scope.row.artInfoTitle }}
         </template>
       </el-table-column>
-      <el-table-column label="Classify" width="110" align="center">
+      <el-table-column label="分类" width="110" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.articleSort?scope.row.articleSort.sortName : ''}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Author" width="110" align="center">
+      <el-table-column label="作者" width="110" align="center">
         <template slot-scope="scope">
           {{ scope.row.user?scope.row.user.uUsername:'' }}
         </template>
@@ -55,19 +55,19 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="CreateTime">
+      <el-table-column align="center" label="创建时间">
         <template slot-scope="scope">
           <i class="el-icon-time"/>
           <span>{{ scope.row.artInfoCreatedTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="ModifiedTime">
+      <el-table-column align="center" label="更新时间">
         <template slot-scope="scope">
           <i class="el-icon-time"/>
           <span>{{ scope.row.artInfoModifiedTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="Action">
+      <el-table-column align="center" label="操作">
         <template slot-scope="scope">
           <el-button
             size="mini"

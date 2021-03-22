@@ -59,7 +59,7 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/user/userTable',
     name: 'User',
-    meta: { title: '用户', icon: 'el-icon-user' },
+    meta: { title: '用户管理', icon: 'el-icon-user' },
     children: [
       {
         path: 'userTable',
@@ -74,7 +74,7 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/article/articleTable',
     name: 'Article',
-    meta: { title: '文章', icon: 'el-icon-reading' },
+    meta: { title: '文章管理', icon: 'el-icon-reading' },
     children: [
       {
         path: 'articleTable',
@@ -102,7 +102,7 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/classify/classifyTree',
     name: 'Classify',
-    meta: { title: '分类', icon: 'el-icon-s-grid' },
+    meta: { title: '分类管理', icon: 'el-icon-s-grid' },
     children: [
       {
         path: 'classifyTree',
@@ -123,7 +123,7 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/media/mediaTable',
     name: 'Media',
-    meta: { title: '媒体', icon: 'el-icon-folder' },
+    meta: { title: '媒体管理', icon: 'el-icon-folder' },
     children: [
       {
         path: 'mediaTable',
@@ -135,7 +135,7 @@ export const constantRoutes = [
         path: 'addMedia',
         name: 'AddMedia',
         component: () => import('@/views/form/media/index'),
-        meta: { title: '添加新媒体', icon: 'el-icon-folder' }
+        meta: { title: '添加新媒体', icon: 'el-icon-plus' }
       }
     ]
   },

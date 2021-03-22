@@ -1,8 +1,8 @@
 <template>
   <div class="app-container">
     <el-form ref="form" v-loading="loading" :model="form" label-width="120px">
-      <el-form-item label="媒体">
-        <el-button @click="openMediaStock">添加媒体</el-button>
+      <el-form-item label="媒体" style="position: sticky;top: 0px;z-index: 1501;background-color: white">
+        <el-button  @click="openMediaStock">添加媒体</el-button>
       </el-form-item>
       <el-form-item label="封面(可选)">
         <div class="coverBox" @click="selectCover()">

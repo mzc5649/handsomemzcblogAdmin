@@ -13,27 +13,17 @@
           {{ scope.row.uId}}
         </template>
       </el-table-column>
-      <el-table-column label="UIcon" align="center" width="70">
+      <el-table-column label="头像" align="center" width="70">
         <template slot-scope="scope">
           <img :src="scope.row.uIcon" class="user-avatar">
         </template>
       </el-table-column>
-      <el-table-column label="UName" >
+      <el-table-column label="用户昵称" >
         <template slot-scope="scope">
           {{ scope.row.uUsername }}
         </template>
       </el-table-column>
-      <el-table-column label="PWD"  align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.uPwd }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="Email"  align="center">
-        <template slot-scope="scope">
-          {{ scope.row.uEmail }}
-        </template>
-      </el-table-column>
-      <el-table-column class-name="status-col" label="Status"  align="center">
+      <el-table-column class-name="status-col" label="状态"  align="center">
         <template slot-scope="scope">
           <el-switch
             :active-value="0"
@@ -45,13 +35,13 @@
           ></el-switch>
         </template>
       </el-table-column>
-      <el-table-column align="center"  label="RegTime" width="200">
+      <el-table-column align="center"  label="注册时间" width="200">
         <template slot-scope="scope">
           <i class="el-icon-time" />
           <span>{{ scope.row.uRegTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center"  label="Action">
+      <el-table-column align="center"  label="操作">
         <template slot-scope="scope">
           <el-button
             size="mini"

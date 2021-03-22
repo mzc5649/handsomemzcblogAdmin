@@ -1,11 +1,11 @@
 <template>
   <div class="app-container">
     <el-form ref="form" v-loading="loading" :model="form" label-width="120px">
-      <el-form-item label="操作" style="position: sticky;top: 0px;z-index: 1501;background-color: white">
+      <el-form-item label="操作">
         <el-button type="primary" @click="onSubmit">修改</el-button>
         <el-button @click="onCancel">返回</el-button>
       </el-form-item>
-      <el-form-item label="媒体">
+      <el-form-item label="媒体"  style="position: sticky;top: 0px;z-index: 1501;background-color: white">
         <el-button @click="openMediaStock">添加媒体</el-button>
       </el-form-item>
       <el-form-item label="状态">
@@ -35,10 +35,8 @@
           </div>
           <span v-else>
             <i  class="el-icon-plus img-uploader-icon" />
-            // todo:待完善还原封面
-             <el-button v-if="oldCoverUrl" size="small" type="primary" style="position: absolute;left: 200px;bottom: 0">还原</el-button>
+             <el-button @click.stop="renewCover" v-if="oldCoverUrl" size="small" type="primary" style="position: absolute;left: 200px;bottom: 0">还原</el-button>
           </span>
-
         </div>
       </el-form-item>
       <el-form-item label="标题">
@@ -126,7 +124,7 @@ export default {
   },
   computed: {
     oldCoverUrl() {
-      return window.sessionStorage.getItem('oldCoverUrl') || ''
+      return this.$store.getters.oldCoverUrl
     }
   },
   methods: {
@@ -134,7 +132,8 @@ export default {
     fetchData() {
       getArticleById(this.id).then(response => {
         this.form = response.data
-        window.sessionStorage.setItem('oldCoverUrl', this.form.coverUrl)
+        // 存储旧的封面
+        this.$store.dispatch('article/saveEditOldCoverUrl', this.form.coverUrl)
         getClassifyList().then(response => {
           this.classifyData = response.data
           this.loading = false
@@ -224,6 +223,10 @@ export default {
       } else if (this.mediaStock.selectMediaMode === 2) {
         this.form.coverUrl = media.mediaInfoUrl
       }
+    },
+    // 还原为初始的封面
+    renewCover() {
+      this.form.coverUrl = this.$store.getters.oldCoverUrl
     }
   }
 }
