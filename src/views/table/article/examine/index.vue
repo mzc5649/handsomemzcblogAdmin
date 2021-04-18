@@ -28,24 +28,7 @@
           {{ scope.row.user?scope.row.user.uUsername:'' }}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="置顶">
-        <template slot-scope="scope">
-          <el-switch
-            v-model="scope.row.artInfoIsTop"
-            @change="changeIsTop(scope.row.artInfoId,scope.row.artInfoIsTop,scope.row)"
-            :active-value=1
-            :inactive-value=0
-            active-color="#13ce66"
-            inactive-color="#ff4949">
-          </el-switch>
-        </template>
-      </el-table-column>
-      <el-table-column
-          align="center"
-          label="状态"
-          :filters=statusOption
-          :filter-method="filterStatus"
-      >
+      <el-table-column align="center" label="状态">
         <template slot-scope="scope">
           <el-tag
             size="mini"
@@ -111,7 +94,7 @@
         <el-form-item label="操作">
           <el-select v-model="statusForm.artInfoStatus">
             <template v-for="item in statusOption">
-              <el-option :key="item.value" :label="item.text" :value="item.value" />
+              <el-option :key="item.value" :label="item.label" :value="item.value" />
             </template>
           </el-select>
         </el-form-item>
@@ -125,7 +108,7 @@
 </template>
 
 <script>
-import { getArticleList, delArticle, uptArticleIsTopById, uptArticleStatusById } from '@/api/article'
+import { listArticleOfExamine, delArticle, uptArticleStatusById } from '@/api/article'
 
 export default {
   filters: {
@@ -161,15 +144,15 @@ export default {
       statusFormLoading: false,
       statusOption: [
         {
-          text: '正常',
+          label: '正常',
           value: 0
         },
         {
-          text: '禁用',
+          label: '禁用',
           value: 1
         },
         {
-          text: '审核',
+          label: '审核',
           value: 2
         }
       ]
@@ -181,23 +164,10 @@ export default {
   methods: {
     fetchData() {
       this.listLoading = true
-      getArticleList(this.page).then(response => {
+      listArticleOfExamine(this.page).then(response => {
         this.list = response.data.recordList
         this.total = response.data.recordCount
         this.listLoading = false
-      })
-    },
-    /* 改变置顶状态 */
-    changeIsTop(id, value, row) {
-      // 改变状态
-      uptArticleIsTopById(id).then(res => {
-        this.$message({
-          type: 'success',
-          message: '修改成功!'
-        })
-      }).catch(function() {
-        // 恢复原状
-        row.artInfoIsTop = value ? 0 : 1
       })
     },
     pageChange(index) {
@@ -229,6 +199,7 @@ export default {
       uptArticleStatusById(id, { status: status }).then(res => {
         this.statusFormLoading = false
         this.statusVisible = false
+        this.fetchData()
         this.$message({
           type: 'success',
           message: res.msg || '修改成功!'
@@ -257,10 +228,6 @@ export default {
           message: '已取消删除'
         })
       })
-    },
-    // 过滤
-    filterStatus(value, row) {
-      return row.artInfoStatus === value
     }
   }
 }

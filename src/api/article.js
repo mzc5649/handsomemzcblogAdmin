@@ -14,6 +14,18 @@ export function getArticleList(params) {
   })
 }
 /**
+ * 获取审核文章列表
+ * @param params
+ * @returns {AxiosPromise}
+ */
+export function listArticleOfExamine(params) {
+  return request({
+    url: '/admin/article/examine',
+    method: 'get',
+    params
+  })
+}
+/**
  * 删除文章
  * @param params
  * @returns {AxiosPromise}
@@ -72,3 +84,16 @@ export function addArticle(article) {
     data
   })
 }
+/**
+ * 修改文章状态
+ * @param params
+ * @returns {AxiosPromise}
+ */
+export function uptArticleStatusById(id, params) {
+  return request({
+    url: '/admin/article/uptStatus/' + id,
+    method: 'put',
+    params
+  })
+}
+

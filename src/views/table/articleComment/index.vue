@@ -10,87 +10,63 @@
     >
       <el-table-column align="center" prop="ID" label="ID" width="95">
         <template slot-scope="scope">
-          {{ scope.row.artInfoId }}
+          {{ scope.row.artCmtId }}
         </template>
       </el-table-column>
-      <el-table-column label="标题" :show-overflow-tooltip="true">
+      <el-table-column label="内容" :show-overflow-tooltip="true">
         <template slot-scope="scope">
-          {{ scope.row.artInfoTitle }}
+          {{ scope.row.artCmtContent }}
         </template>
       </el-table-column>
-      <el-table-column label="分类" width="110" align="center">
+      <el-table-column label="文章id" width="110" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.articleSort?scope.row.articleSort.sortName : ''}}</span>
+          <span>{{ scope.row.artId }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="作者" width="110" align="center">
+      <el-table-column label="发布者" width="110" align="center">
         <template slot-scope="scope">
           {{ scope.row.user?scope.row.user.uUsername:'' }}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="置顶">
-        <template slot-scope="scope">
-          <el-switch
-            v-model="scope.row.artInfoIsTop"
-            @change="changeIsTop(scope.row.artInfoId,scope.row.artInfoIsTop,scope.row)"
-            :active-value=1
-            :inactive-value=0
-            active-color="#13ce66"
-            inactive-color="#ff4949">
-          </el-switch>
-        </template>
-      </el-table-column>
-      <el-table-column
-          align="center"
-          label="状态"
-          :filters=statusOption
-          :filter-method="filterStatus"
-      >
+      <el-table-column align="center" label="状态">
         <template slot-scope="scope">
           <el-tag
             size="mini"
-            :type="scope.row.artInfoStatus | statusFilterType"
+            :type="scope.row.artCmtStatus | statusFilterType"
             effect="dark"
-          >{{ scope.row.artInfoStatus | statusFilterText }}</el-tag>
-          <el-tag
-            size="mini"
-            v-if="scope.row.artInfoIsTop === 1"
-            style="margin-left: 10px">
-            置顶
-          </el-tag>
+          >{{ scope.row.artCmtStatus | statusFilterText }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column align="center" label="创建时间">
         <template slot-scope="scope">
-          <i class="el-icon-time"/>
-          <span>{{ scope.row.artInfoCreatedTime }}</span>
+          <i class="el-icon-time" />
+          <span>{{ scope.row.artCmtCreatedTime }}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="更新时间">
         <template slot-scope="scope">
-          <i class="el-icon-time"/>
-          <span>{{ scope.row.artInfoModifiedTime }}</span>
+          <i class="el-icon-time" />
+          <span>{{ scope.row.artCmtModifiedTime }}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作">
         <template slot-scope="scope">
           <el-button
             size="mini"
-            @click="handleOpen(scope.row.artInfoId)">查看
+            @click="handleOpen(scope.row.artId)"
+          >查看
           </el-button>
           <el-button
             size="mini"
-            @click="handleEdit(scope.$index, scope.row)">编辑
-          </el-button>
-          <el-button
-            size="mini"
-            @click="handleStatus(scope.$index, scope.row)">状态
+            @click="handleEdit(scope.$index, scope.row)"
+          >状态
           </el-button>
           <el-button
             size="mini"
             type="danger"
             style="margin-top: 10px"
-            @click="handleDelete(scope.$index, scope.row)">删除
+            @click="handleDelete(scope.$index, scope.row)"
+          >删除
           </el-button>
         </template>
       </el-table-column>
@@ -105,43 +81,45 @@
       @current-change="pageChange"
       @size-change="pageSizeChange"
     >
+      <!--修改对话框-->
     </el-pagination>
-    <el-dialog title="修改状态" :visible.sync="statusVisible">
-      <el-form :model="statusForm" label-width="50px">
+    <el-dialog title="修改状态" :visible.sync="commentEditFormVisible">
+      <el-form :model="commentEditForm" label-width="50px">
+        <el-form-item label="内容">
+          <el-input v-model="commentEditForm.artCmtContent" autosize type="textarea" readonly />
+        </el-form-item>
         <el-form-item label="操作">
-          <el-select v-model="statusForm.artInfoStatus">
+          <el-select v-model="commentEditForm.artCmtStatus">
             <template v-for="item in statusOption">
-              <el-option :key="item.value" :label="item.text" :value="item.value" />
+              <el-option :key="item.value" :label="item.label" :value="item.value" />
             </template>
           </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="statusVisible = false">取 消</el-button>
-        <el-button type="primary" :loading="statusFormLoading" @click="uptStatusSubmit(statusForm.artInfoId,statusForm.artInfoStatus)">确 定</el-button>
+        <el-button @click="commentEditFormVisible = false">取 消</el-button>
+        <el-button type="primary" :loading="editCommentLoading" @click="editCommentSubmit(commentEditForm.artCmtId,commentEditForm.artCmtStatus)">确 定</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import { getArticleList, delArticle, uptArticleIsTopById, uptArticleStatusById } from '@/api/article'
+import { listArticleComment, uptArticleCommentStatus, delArticleCommentById } from '@/api/articleComment'
 
 export default {
   filters: {
     statusFilterType(status) {
       const statusMap = {
         0: 'success',
-        1: 'danger',
-        2: 'info'
+        1: 'danger'
       }
       return statusMap[status]
     },
     statusFilterText(status) {
       const statusMap = {
         0: '正常',
-        1: '下架',
-        2: '审核'
+        1: '禁用'
       }
       return statusMap[status]
     }
@@ -155,22 +133,21 @@ export default {
         pageSize: 10
       },
       total: 0,
-      statusVisible: false,
-      statusForm: {
+      commentEditFormVisible: false,
+      commentEditForm: {
+        artCmtId: '',
+        artCmtContent: '',
+        artCmtStatus: ''
       },
-      statusFormLoading: false,
+      editCommentLoading: false,
       statusOption: [
         {
-          text: '正常',
+          label: '正常',
           value: 0
         },
         {
-          text: '禁用',
+          label: '禁用',
           value: 1
-        },
-        {
-          text: '审核',
-          value: 2
         }
       ]
     }
@@ -181,7 +158,7 @@ export default {
   methods: {
     fetchData() {
       this.listLoading = true
-      getArticleList(this.page).then(response => {
+      listArticleComment(this.page).then(response => {
         this.list = response.data.recordList
         this.total = response.data.recordCount
         this.listLoading = false
@@ -212,55 +189,43 @@ export default {
     handleOpen(id) {
       window.open('https://handsomemzc.cn/blog/article/' + id, '_blank')
     },
+    // 修改按钮
     handleEdit(index, row) {
-      this.$router.push(
-        {
-          name: 'EditArticle', params: { id: row.artInfoId }
-        })
+      this.commentEditForm = row
+      this.commentEditFormVisible = true
     },
-    // 修改状态
-    handleStatus(index, row) {
-      this.statusForm = row
-      this.statusVisible = true
-    },
-    // 修改状态提交
-    uptStatusSubmit(id, status) {
-      this.statusFormLoading = true
-      uptArticleStatusById(id, { status: status }).then(res => {
-        this.statusFormLoading = false
-        this.statusVisible = false
+    // 修改提交
+    editCommentSubmit(id, status) {
+      this.editCommentLoading = true
+      uptArticleCommentStatus(id, { status: status }).then(res => {
+        this.fetchData()
+        this.editCommentLoading = false
+        this.commentEditFormVisible = false
         this.$message({
           type: 'success',
-          message: res.msg || '修改成功!'
+          message: '修改成功'
         })
       }).catch(() => {
         this.fetchData()
-        this.statusFormLoading = false
+        this.editCommentLoading = false
       })
     },
     handleDelete(index, row) {
-      this.$confirm('此操作将删除该文章, 是否继续?', '提示', {
+      this.$confirm('此操作将删除该评论, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        delArticle(row.artInfoId).then(response => {
+        delArticleCommentById(row.artCmtId).then(response => {
+          this.fetchData()
           this.$message({
             type: 'success',
             message: '删除成功!'
           })
-          this.fetchData()
         })
       }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        })
+        this.fetchData()
       })
-    },
-    // 过滤
-    filterStatus(value, row) {
-      return row.artInfoStatus === value
     }
   }
 }

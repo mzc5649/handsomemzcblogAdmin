@@ -70,7 +70,7 @@
 import { getArticleById, uptArticleById } from '@/api/article'
 import { getClassifyList } from '@/api/classify'
 import { addImage, delImage } from '@/api/util'
-import MediaStock from "@/components/MediaStock";
+import MediaStock from '@/components/MediaStock'
 
 export default {
   components: { MediaStock },
@@ -104,11 +104,11 @@ export default {
           value: 0
         },
         {
-          label: '审核',
+          label: '禁用',
           value: 1
         },
         {
-          label: '下架',
+          label: '审核',
           value: 2
         }
       ],

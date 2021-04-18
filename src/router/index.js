@@ -83,6 +83,12 @@ export const constantRoutes = [
         meta: { title: '所有文章', icon: 'table' }
       },
       {
+        path: 'examine',
+        name: 'ExamineArticle',
+        component: () => import('@/views/table/article/examine/index'),
+        meta: { title: '审核区', icon: 'table' }
+      },
+      {
         path: 'form',
         name: 'Form',
         component: () => import('@/views/form/article/add/index'),
@@ -94,6 +100,21 @@ export const constantRoutes = [
         hidden: true,
         component: () => import('@/views/form/article/edit/index'),
         meta: { title: '编辑文章', icon: 'el-icon-edit' }
+      }
+    ]
+  },
+  {
+    path: '/articleComment',
+    component: Layout,
+    redirect: '/articleComment/articleCommentTable',
+    name: 'ArticleComment',
+    meta: { title: '文章评论管理', icon: 'el-icon-reading' },
+    children: [
+      {
+        path: 'articleCommentTable',
+        name: 'ArticleCommentTable',
+        component: () => import('@/views/table/articleComment/index'),
+        meta: { title: '所有文章评论', icon: 'table' }
       }
     ]
   },

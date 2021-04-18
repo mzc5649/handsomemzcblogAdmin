@@ -131,6 +131,7 @@ export default {
       height: 100%;
       display: flex;
       justify-content: center;
+      align-items: center;
       img{
         max-width: 100%;
         max-height: calc(100% - 42px);
